@@ -1,0 +1,62 @@
+--instlaçao e criaçao projeto com adonis
+npm install -g @adonisjs/cli
+adonis new ApiNode --api-only
+
+--subir servidor
+adonis serve --dev
+
+--instalar e iniciar eslint
+npm install -D eslint
+npx eslint --init
+--
+"globals": {
+      "use":true
+    }
+
+--postgress
+npm i --save pg
+
+--criar controller
+adonis make:controller User
+adonis make:model Project -m -c
+
+--migration no banco
+adonis migration:rollback
+adonis migration:run
+
+--email
+adonis install @adonisjs/mail
+https://mailtrap.io
+
+--providers email
+'@adonisjs/mail/providers/MailProvider',
+'@adonisjs/framework/providers/ViewProvider'
+
+--template email--resources/views/emails/forgot_password.edge
+<strong>Recuperando senha</strong>
+<p>Uma solicitação de email foi feita para {{email}}</p>
+<p>Para trocar a senha utilize o token abaixo {{token}} ou clique no link abaixo
+  <a href ="{{ link }}">Clique aqui</a><p>
+
+--Rotas pra usuarios logados
+Route.group(() => {
+  Route.post('/files', 'FileController.store')
+  Route.resource('projects', 'ProjectController').apiOnly()
+}).middleware(['auth'])
+
+
+--Validação
+adonis install @adonisjs/validator
+
+'@adonisjs/validator/providers/ValidatorProvider'
+
+adonis make:validator User
+adonis make:ehandler 
+
+--Internacionalização
+adonis install @adonisjs/antl
+'@adonisjs/antl/providers/AntlProvider'
+
+
+---hooks
+ adonis make:hook Task
