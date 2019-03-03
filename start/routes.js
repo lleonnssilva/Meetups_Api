@@ -12,17 +12,16 @@ Route.post('passwords', 'ForgotPasswordController.store')
 Route.put('passwords', 'ForgotPasswordController.update')
 
 Route.get('/files/:id', 'FileController.show')
-
+Route.post('/files', 'FileController.store')
 Route.group(() => {
-  Route.post('subscriptions', 'SubscriptionController.store').validator(
-    'Subscription'
-  )
+  Route.post('subscriptions/:id', 'SubscriptionController.store')
   Route.post('preferences', 'PreferenceController.store').validator(
     'Preference'
   )
   Route.put('users', 'UserController.update').validator('User')
-  Route.post('/files', 'FileController.store')
+  // Route.post('/files', 'FileController.store')
 
+  Route.get('meetups/filter/:id', 'MeetupController.filter')
   Route.get('meetups/unsigned', 'MeetupController.unsigned')
   Route.get('meetups/signed', 'MeetupController.signed')
   Route.get('meetups/recommended', 'MeetupController.recommended')

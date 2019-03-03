@@ -21,6 +21,7 @@ class UserController {
       if (preferences && preferences.length > 0) {
         await user.preferences().attach(preferences)
       }
+
       return user
     } catch (err) {
       return response
