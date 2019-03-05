@@ -34,7 +34,6 @@ class UserController {
       const user = await User.findOrFail(auth.current.user.id)
       const { preferences, ...data } = request.only([
         'username',
-        'email',
         'password',
         'preferences'
       ])
@@ -52,6 +51,13 @@ class UserController {
         .status(err.status)
         .send({ error: { message: 'Algo deu errado ao salvar os dados!!' } })
     }
+  }
+  async show ({ request, auth }) {
+    const user = await User.query()
+      .where('id', auth.current.user.id)
+      .with('preferences')
+      .fetch()
+    return user
   }
 }
 

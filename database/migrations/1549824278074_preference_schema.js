@@ -8,6 +8,7 @@ class PreferenceSchema extends Schema {
     this.create('preferences', (table) => {
       table.increments()
       table.string('title', 254)
+      table.boolean('checked').defaultTo(false)
       table.timestamps()
     })
   }

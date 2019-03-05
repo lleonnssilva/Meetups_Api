@@ -94,14 +94,15 @@ class MeetupController {
     // return meetups
   }
 
-  async unsigned ({ auth, response }) {
+  async unsigned ({ params, auth, response }) {
     const meetups = await Meetup.query()
       .whereDoesntHave('subscriptions', (builder) => {
         builder.where('user_id', auth.current.user.id)
       })
       .withCount('subscriptions')
       .orderBy('event_date', 'asc')
-      .fetch()
+      .paginate(params.page, 10)
+
     return meetups
 
     // const meetups = await Database.raw(
@@ -120,14 +121,14 @@ class MeetupController {
     // return meetups
   }
 
-  async signed ({ auth, response }) {
+  async signed ({ params, auth, response }) {
     const meetups = await Meetup.query()
       .whereHas('subscriptions', (builder) => {
         builder.where('subscriptions.user_id', auth.current.user.id)
       })
       .withCount('subscriptions')
       .orderBy('event_date', 'asc')
-      .fetch()
+      .paginate(params.page, 5)
     return meetups
     // const meetups = await Database.raw(
     //   'Select id,title,image,description,event_date,place ,subscriptions, registered ' +
@@ -145,7 +146,7 @@ class MeetupController {
     // return meetups
   }
 
-  async recommended ({ auth }) {
+  async recommended ({ params, auth }) {
     const subquery = await Database.from('preference_user')
       .where('user_id', auth.current.user.id)
       .select('preference_id as id')
@@ -160,7 +161,7 @@ class MeetupController {
         builder.whereIn('preferences.id', subquery)
       })
       .orderBy('event_date', 'asc')
-      .fetch()
+      .paginate(params.page, 5)
     return meetups
   }
 
