@@ -1,0 +1,4 @@
+npm install -g @adonisjs/cli
+adonis migration:run
+adonis kue:listen
+adonis serve  --dev
