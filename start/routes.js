@@ -20,8 +20,8 @@ Route.group(() => {
     'Preference'
   )
   Route.get('users/profile', 'UserController.show')
-  Route.put('users', 'UserController.update').validator('User')
-
+  Route.put('users', 'UserController.update')
+  Route.put('users/profile', 'UserController.profile')
   Route.get('meetups/filter/:id', 'MeetupController.filter')
   Route.get('meetups/unsigned/:page', 'MeetupController.unsigned')
   Route.get('meetups/signed/:page', 'MeetupController.signed')

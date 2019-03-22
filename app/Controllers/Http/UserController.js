@@ -41,10 +41,28 @@ class UserController {
       user.merge(data)
       await user.save()
 
-      if (preferences && preferences.length > 0) {
-        await user.preferences().sync(preferences)
-        await user.load('preferences')
-      }
+      // if (preferences && preferences.length > 0) {
+      await user.preferences().sync(preferences)
+      await user.load('preferences')
+      // }
+      return user
+    } catch (err) {
+      return response
+        .status(err.status)
+        .send({ error: { message: 'Algo deu errado ao salvar os dados!!' } })
+    }
+  }
+  async profile ({ request, auth, response }) {
+    try {
+      const user = await User.findOrFail(auth.current.user.id)
+      const { preferences, ...data } = request.only(['preferences'])
+
+      user.merge(data)
+      await user.save()
+
+      await user.preferences().sync(preferences)
+      await user.load('preferences')
+
       return user
     } catch (err) {
       return response
