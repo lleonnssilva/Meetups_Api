@@ -20,7 +20,8 @@ class FileController {
         type: upload.type,
         subtype: upload.subtype
       })
-      return file
+      // console.log(file.id)
+      return file.id
     } catch (err) {
       return response
         .status(err.status)

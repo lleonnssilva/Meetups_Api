@@ -2,6 +2,8 @@
 const Meetup = use('App/Models/Meetup')
 const Subscription = use('App/Models/Subscription')
 const Database = use('Database')
+const File = use('App/Models/File')
+const Helpers = use('Helpers')
 class MeetupController {
   async index () {
     const meetups = await Database.raw(
@@ -30,8 +32,8 @@ class MeetupController {
         'left join ' +
         '(select j.meetup_id,count(*) subscriptions from Subscriptions j ' +
         'group by j.meetup_id)j on j.meetup_id=m.id ' +
-        'where title like' +
-        `'%${params.id}%'` +
+        'where lower(title) like' +
+        `'%${String(params.id)}%'` +
         '' +
         ' group by id,title,image , registered ,subscriptions'
     )
@@ -85,12 +87,15 @@ class MeetupController {
       'title',
       'description',
       'place',
-      'event_date',
       'image',
+      'event_date',
       'numLimitSubscriptions',
       'preferences'
     ])
-    const meetup = await Meetup.create({ user_id: auth.user.id, ...data })
+    const meetup = await Meetup.create({
+      user_id: auth.user.id,
+      ...data
+    })
     if (preferences && preferences.length > 0) {
       await meetup.preferences().attach(preferences)
       await meetup.load('preferences')

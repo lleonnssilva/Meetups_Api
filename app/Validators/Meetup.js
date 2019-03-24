@@ -10,7 +10,7 @@ class Meetup {
       place: 'required',
       description: 'required',
       event_date: 'date',
-      image: 'required',
+      // image: 'required',
       preferences: 'required'
     }
   }
