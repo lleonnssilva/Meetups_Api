@@ -2,17 +2,13 @@
 const Subscription = use('App/Models/Subscription')
 const Meetup = use('App/Models/Meetup')
 class SubscriptionController {
-  async index () {
-    const subscriptions = await Subscription.query()
-      .with('users')
-      .fetch()
-    return subscriptions
-  }
-
   async store ({ params, auth, response }) {
     try {
-      const data = { user_id: auth.current.user.id, meetup_id: params.id }
-      const subscription = await Subscription.create(data)
+      const subscription = {
+        user_id: auth.current.user.id,
+        meetup_id: params.id
+      }
+      await Subscription.create(subscription)
 
       const meetup = await Meetup.query()
         .where('id', params.id)
@@ -24,15 +20,15 @@ class SubscriptionController {
         .where('user_id', auth.user.id)
         .first()
 
-      const meetup_registered = {
+      const subscriptions = {
         meetup: meetup,
         registered: !!registered
       }
 
-      return meetup_registered
+      return subscriptions
     } catch (err) {
       return response.status(err.status).send({
-        error: { message: 'Algo deu errado ao se increver no Meetup!!' }
+        error: { message: err }
       })
     }
   }

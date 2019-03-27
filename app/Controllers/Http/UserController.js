@@ -2,12 +2,6 @@
 const User = use('App/Models/User')
 
 class UserController {
-  async index ({ request }) {
-    const users = await User.query()
-      .with('preferences')
-      .fetch()
-    return users
-  }
   async store ({ request, response }) {
     try {
       const { preferences, ...data } = request.only([
@@ -29,7 +23,7 @@ class UserController {
         .send({ error: { message: 'Algo deu errado ao se cadastrar!!' } })
     }
   }
-  async update ({ params, request, auth, response }) {
+  async update ({ request, auth, response }) {
     try {
       const user = await User.findOrFail(auth.current.user.id)
       const { preferences, ...data } = request.only([
@@ -41,10 +35,9 @@ class UserController {
       user.merge(data)
       await user.save()
 
-      // if (preferences && preferences.length > 0) {
       await user.preferences().sync(preferences)
-      await user.load('preferences')
-      // }
+      // await user.load('preferences')
+
       return user
     } catch (err) {
       return response
@@ -52,7 +45,7 @@ class UserController {
         .send({ error: { message: 'Algo deu errado ao salvar os dados!!' } })
     }
   }
-  async profile ({ request, auth, response }) {
+  async preferences ({ request, auth, response }) {
     try {
       const user = await User.findOrFail(auth.current.user.id)
       const { preferences, ...data } = request.only(['preferences'])
@@ -61,16 +54,13 @@ class UserController {
       await user.save()
 
       await user.preferences().sync(preferences)
-      await user.load('preferences')
 
       return user
     } catch (err) {
-      return response
-        .status(err.status)
-        .send({ error: { message: 'Algo deu errado ao salvar os dados!!' } })
+      return response.status(err.status).send({ error: { message: err } })
     }
   }
-  async show ({ request, auth }) {
+  async show ({ auth }) {
     const user = await User.query()
       .where('id', auth.current.user.id)
       .with('preferences')

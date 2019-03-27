@@ -127,3 +127,91 @@
     //   .orderBy('event_date', 'asc')
     //   .fetch()
     // return meetups
+
+
+  // async index ({ request }) {
+  //   const users = await User.query()
+  //     .with('preferences')
+  //     .fetch()
+  //   return users
+  // }
+
+
+async store ({ request }) {
+    const data = request.only(['title'])
+
+    const preference = await Preference.create(data)
+
+    return preference
+  }
+
+
+  // async update ({ params, request, auth }) {
+  //   const meetup = await Meetup.findOrFail(params.id)
+
+  //   const { preferences, ...data } = request.only([
+  //     'title',
+  //     'description',
+  //     'place',
+  //     'event_date',
+  //     'image',
+  //     'numLimitSubscriptions',
+  //     'preferences'
+  //   ])
+
+  //   if (preferences && preferences.length > 0) {
+  //     meetup.merge({ user_id: auth.user.id, ...data })
+  //     await meetup.save()
+  //     await meetup.preferences().sync(preferences)
+  //     await meetup.load('preferences')
+  //   }
+  //   return meetup
+  // }
+
+
+  async index () {
+    const meetups = await Database.raw(
+      'Select id,title,image ,inscritos, inscrito ' +
+        'from Meetups m left join ' +
+        '(select s.user_id,s.meetup_id,count(*) inscrito from Subscriptions s ' +
+        'left join users u on s.user_id=u.id ' +
+        'where s.user_id = 17 group by s.user_id,s.meetup_id)p on p.meetup_id=m.id ' +
+        'left join ' +
+        '(select j.meetup_id,count(*) inscritos from Subscriptions j ' +
+        'group by j.meetup_id)j on j.meetup_id=m.id ' +
+        'group by id,title,image , inscrito ,inscritos'
+    )
+    return meetups
+  }
+
+
+
+    // const meetups = await Database.raw(
+    //   'Select id,title,image,description,event_date,place ,subscriptions, registered ' +
+    //     'from Meetups m left join ' +
+    //     '(select s.user_id,s.meetup_id,count(*) registered from Subscriptions s ' +
+    //     'left join users u on s.user_id=u.id ' +
+    //     'where s.user_id =  ' +
+    //     `${auth.current.user.id}` +
+    //     ' group by s.user_id,s.meetup_id)p on p.meetup_id=m.id ' +
+    //     'left join ' +
+    //     '(select j.meetup_id,count(*) subscriptions from Subscriptions j ' +
+    //     'group by j.meetup_id)j on j.meetup_id=m.id ' +
+    //     'where lower(title) like' +
+    //     `'%${String(params.id)}%'` +
+    //     '' +
+    //     ' group by id,title,image , registered ,subscriptions'
+    // )
+    // return meetups
+
+
+ async index () {
+    const subscriptions = await Subscription.query()
+      .with('users')
+      .fetch()
+    return subscriptions
+  }
+
+  Route.post('passwords', 'ForgotPasswordController.store')
+Route.put('passwords', 'ForgotPasswordController.update')
+
