@@ -144,6 +144,7 @@ async store ({ request }) {
 
     return preference
   }
+  teste
 
 
   // async update ({ params, request, auth }) {
