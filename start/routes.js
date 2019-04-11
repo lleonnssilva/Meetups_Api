@@ -8,10 +8,10 @@ Route.group(() => {
   Route.get('users/profile', 'UserController.show')
   Route.put('users/preferences', 'UserController.preferences')
 
-  Route.get('meetups/filter/:id', 'MeetupController.filter')
-  Route.get('meetups/unsigned', 'MeetupController.unsigned')
-  Route.get('meetups/signed', 'MeetupController.signed')
-  Route.get('meetups/recommended', 'MeetupController.recommended')
+  Route.get('meetups/filter/:criterio/:page/', 'MeetupController.filter')
+  Route.get('meetups/unsigned/:id', 'MeetupController.unsigned')
+  Route.get('meetups/signed/:id', 'MeetupController.signed')
+  Route.get('meetups/recommended/:id', 'MeetupController.recommended')
   Route.get('meetups/:id', 'MeetupController.show')
   Route.post('meetups', 'MeetupController.store').validator('Meetup')
 

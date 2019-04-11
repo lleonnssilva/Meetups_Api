@@ -7,9 +7,10 @@ class MeetupController {
   async filter ({ params, response }) {
     try {
       const meetups = await Meetup.query()
-        .where('title', 'LIKE', '%' + params.id + '%')
+        .where('title', 'LIKE', '%' + params.criterio + '%')
         .orderBy('created_at', 'desc')
-        .fetch()
+        .withCount('subscriptions')
+        .paginate(params.page, 5)
       return meetups
     } catch (err) {
       return response.status(err.status).send({
@@ -18,7 +19,7 @@ class MeetupController {
     }
   }
 
-  async unsigned ({ auth, response }) {
+  async unsigned ({ params, auth, response }) {
     try {
       // saber se usuário autenticado não está inscrito
       const meetups = await Meetup.query()
@@ -28,8 +29,8 @@ class MeetupController {
 
         // pegar total de inscritos
         .withCount('subscriptions')
-        .orderBy('event_date', 'desc')
-        .fetch()
+        .orderBy('event_date', 'asc')
+        .paginate(params.id, 5)
 
       return meetups
     } catch (err) {
@@ -39,7 +40,7 @@ class MeetupController {
     }
   }
 
-  async signed ({ auth, response }) {
+  async signed ({ params, auth, response }) {
     try {
       // saber se usuário autenticado está inscrito
       const meetups = await Meetup.query()
@@ -50,7 +51,7 @@ class MeetupController {
         // pegar total de inscritos
         .withCount('subscriptions')
         .orderBy('event_date', 'desc')
-        .fetch()
+        .paginate(params.id, 5)
       return meetups
     } catch (err) {
       return response.status(err.status).send({
@@ -59,7 +60,7 @@ class MeetupController {
     }
   }
 
-  async recommended ({ auth, response }) {
+  async recommended ({ params, auth, response }) {
     try {
       // preferências do usuário autenticado
       const subquery = await Database.from('preference_user')
@@ -79,7 +80,7 @@ class MeetupController {
           builder.whereIn('preferences.id', subquery)
         })
         .orderBy('event_date', 'desc')
-        .fetch()
+        .paginate(params.id, 5)
       return meetups
     } catch (err) {
       return response.status(err.status).send({
