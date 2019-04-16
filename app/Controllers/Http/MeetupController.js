@@ -10,7 +10,7 @@ class MeetupController {
         .where('title', 'LIKE', '%' + params.criterio + '%')
         .orderBy('created_at', 'desc')
         .withCount('subscriptions')
-        .paginate(params.page, 5)
+        .paginate(params.page, 20)
       return meetups
     } catch (err) {
       return response.status(err.status).send({

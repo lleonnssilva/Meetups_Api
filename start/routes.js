@@ -1,8 +1,8 @@
 'use strict'
 const Route = use('Route')
 
-Route.post('sessions', 'SessionController.store')
-Route.post('users', 'UserController.store')
+Route.post('sessions', 'SessionController.store').validator('Session')
+Route.post('users', 'UserController.store').validator('User')
 Route.get('/files/:id', 'FileController.show')
 Route.group(() => {
   Route.get('users/profile', 'UserController.show')

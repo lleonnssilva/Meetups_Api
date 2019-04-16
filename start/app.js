@@ -60,6 +60,7 @@ const aliases = {}
 | Here you store ace commands for your package
 |
 */
+//, 'App/Jobs/NewSignUpMail'
 const commands = []
 const jobs = ['App/Jobs/NewSubscriptionMail']
 

@@ -1,7 +1,5 @@
 'use strict'
 const Mail = use('Mail')
-// const Helpers = use('Helpers')
-
 class NewSubscriptionMail {
   static get concurrency () {
     return 1
@@ -10,7 +8,6 @@ class NewSubscriptionMail {
   static get key () {
     return 'NewSubscriptionMail-job'
   }
-  //, file
   async handle ({
     email,
     username,
@@ -33,16 +30,11 @@ class NewSubscriptionMail {
         place,
         image
       },
-      (message) => {
+      message => {
         message
           .to(email)
           .from('leoguaruleo@gmail.com', 'Leonardo | dev')
           .subject('Inscrição em Meetup')
-        // if (file) {
-        //   message.attach(Helpers.tmpPath(`uploads/${file.file}`), {
-        //     filename: file.name
-        //   })
-        // }
       }
     )
   }

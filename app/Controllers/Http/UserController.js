@@ -1,6 +1,6 @@
 'use strict'
+const Mail = use('Mail')
 const User = use('App/Models/User')
-
 class UserController {
   async store ({ request, response }) {
     try {
@@ -15,12 +15,29 @@ class UserController {
       if (preferences && preferences.length > 0) {
         await user.preferences().attach(preferences)
       }
+      try {
+        const email = user.email
+        const username = user.username
+        await Mail.send(
+          ['emails.new_signUp'],
+          {
+            email,
+            username
+          },
+          message => {
+            message
+              .to(user.email)
+              .from('leoguaruleo@gmail.com', 'OnMeetup | Dev')
+              .subject('Incrição no OnMeetup')
+          }
+        )
+      } catch (err) {
+        console.log(err)
+      }
 
       return user
     } catch (err) {
-      return response
-        .status(err.status)
-        .send({ error: { message: 'Algo deu errado ao se cadastrar!!' } })
+      return response.status(err.status).send({ error: { message: err } })
     }
   }
   async update ({ request, auth, response }) {
@@ -36,7 +53,6 @@ class UserController {
       await user.save()
 
       await user.preferences().sync(preferences)
-      // await user.load('preferences')
 
       return user
     } catch (err) {
@@ -60,12 +76,16 @@ class UserController {
       return response.status(err.status).send({ error: { message: err } })
     }
   }
-  async show ({ auth }) {
-    const user = await User.query()
-      .where('id', auth.current.user.id)
-      .with('preferences')
-      .fetch()
-    return user
+  async show ({ response, auth }) {
+    try {
+      const user = await User.query()
+        .where('id', auth.current.user.id)
+        .with('preferences')
+        .fetch()
+      return user
+    } catch (err) {
+      return response.status(err.status).send({ error: { message: err } })
+    }
   }
 }
 

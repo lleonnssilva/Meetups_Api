@@ -1,0 +1,20 @@
+---Banco Postgres---
+DB_CONNECTION=pg
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=meetups
+HASH_DRIVER=bcrypt
+
+--comando api--
+adonis migration:run
+adonis seed
+adonis kue:listen
+adonis serve  --dev
+
+--setar ip service no app
+
+//src/config/baseUrl.js
+const ip = "IP da API";
+

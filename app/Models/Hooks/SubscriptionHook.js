@@ -4,7 +4,7 @@ const Kue = use('Kue')
 const Job = use('App/Jobs/NewSubscriptionMail')
 const SubscriptionHook = (exports = module.exports = {})
 
-SubscriptionHook.sendMailSubscription = async (subscriptionInstance) => {
+SubscriptionHook.sendMailSubscription = async subscriptionInstance => {
   if (!subscriptionInstance.user_id && !subscriptionInstance.dirty.user_id) {
     return
   }

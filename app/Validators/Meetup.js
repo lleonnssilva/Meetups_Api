@@ -7,11 +7,11 @@ class Meetup {
   get rules () {
     return {
       title: 'required',
-      place: 'required',
       description: 'required',
-      event_date: 'date',
       image: 'required',
-      preferences: 'required'
+      place: 'required',
+      preferences: 'required',
+      event_date: 'date'
     }
   }
   get messages () {
