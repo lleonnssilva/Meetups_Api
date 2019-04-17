@@ -1,4 +1,32 @@
----Banco Postgres---
+----------------------
+---------comando api--
+----------------------
+
+--criar as tabelas no banco
+adonis migration:run
+
+--adicionar as prefêrencias iniciais da aplicação
+adonis seed
+
+--ouvir os jobs do redis para enviar emails
+adonis kue:listen
+
+--rodar a api
+adonis serve  --dev
+
+--setar ip service no app
+
+//src/config/baseUrl.js
+const ip = "IP da API";
+
+---estrutura do meu env
+HOST=
+PORT=3333
+NODE_ENV=development
+APP_NAME=AdonisJs
+APP_URL=http://${HOST}:${PORT}
+CACHE_VIEWS=false
+APP_KEY=uxCGHoLmwrf2jpVkkdhngTk5Wshl89rj
 DB_CONNECTION=pg
 DB_HOST=127.0.0.1
 DB_PORT=5432
@@ -7,14 +35,9 @@ DB_PASSWORD=postgres
 DB_DATABASE=meetups
 HASH_DRIVER=bcrypt
 
---comando api--
-adonis migration:run
-adonis seed
-adonis kue:listen
-adonis serve  --dev
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=
+MAIL_PASSWORD=
 
---setar ip service no app
-
-//src/config/baseUrl.js
-const ip = "IP da API";
-
+SENTRY_DSN=
